@@ -108,5 +108,3 @@ def get_recent_prices(ticker: str = None, count: int = 10):
     results = cursor.fetchall()
     conn.close()
     return [dict(row) for row in results]
-
-print(get_recent_news())
