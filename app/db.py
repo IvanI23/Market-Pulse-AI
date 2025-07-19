@@ -17,13 +17,6 @@ def init_database():
     with open(schema_path, 'r') as f:
         schema = f.read()
     
-    schema = schema.replace('SERIAL PRIMARY KEY', 'INTEGER PRIMARY KEY AUTOINCREMENT')
-    schema = schema.replace('TIMESTAMP', 'DATETIME')
-    schema = schema.replace('DECIMAL(10,2)', 'REAL')
-    schema = schema.replace('DECIMAL(3,2)', 'REAL')
-    schema = schema.replace('DECIMAL(5,2)', 'REAL')
-    schema = schema.replace('BOOLEAN', 'INTEGER')
-    
     conn.executescript(schema)
     conn.close()
 
@@ -108,3 +101,32 @@ def get_recent_prices(ticker: str = None, count: int = 10):
     results = cursor.fetchall()
     conn.close()
     return [dict(row) for row in results]
+
+def get_unprocessed_news(limit: int = 50):
+    conn = get_connection()
+    cursor = conn.cursor()
+    
+    cursor.execute("""
+        SELECT * FROM news_articles 
+        WHERE sentiment_score IS NULL 
+        ORDER BY published_at DESC 
+        LIMIT ?
+    """, (limit,))
+    
+    results = cursor.fetchall()
+    conn.close()
+    return [dict(row) for row in results]
+
+def insert_sentiment(sentiment_results: List[Dict[str, Any]]):
+    conn = get_connection()
+    cursor = conn.cursor()
+    
+    for result in sentiment_results:
+        cursor.execute("""
+            UPDATE news_articles 
+            SET sentiment_score = ? 
+            WHERE id = ?
+        """, (result['score'], result['news_id']))
+    
+    conn.commit()
+    conn.close()
