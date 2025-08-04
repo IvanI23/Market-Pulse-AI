@@ -3,7 +3,7 @@ import requests
 import yfinance as yf
 from datetime import datetime, timedelta
 from dotenv import load_dotenv
-from db import insert_news, insert_price, init_database
+from db import insert_news, insert_price, init_database, clear_all_data
 
 load_dotenv()
 
@@ -63,11 +63,13 @@ def fetch_price_data(ticker: str, days_back: int = 7):
     return price_data
 
 
-def run_ingestion():
+def run_ingestion(reset_database=True):
     db_path = os.path.join(os.path.dirname(__file__), '..', 'sql', 'market_pulse.db')
     if not os.path.exists(db_path):
         print("Setting up database...")
         init_database()
+    elif reset_database:
+        clear_all_data()
     
     today = datetime.utcnow().date()
     yesterday = today - timedelta(days=1)

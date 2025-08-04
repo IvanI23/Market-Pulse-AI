@@ -1,21 +1,185 @@
-import sqlite3
+import time
+import sys
+import os
+from datetime import datetime
 
-def display_table_contents():
-    conn = sqlite3.connect('sql/market_pulse.db')
-    cursor = conn.cursor()
+import db
+import ingest
+import nlp_engine
+import analysis
+import config
+
+def print_header(title):
+    print("\n" + "="*60)
+    print(f" {title}")
+    print("="*60)
+
+def print_step(step_num, description):
+    print(f"\n[STEP {step_num}] {description}")
+    print("-" * 40)
+
+def print_result(message):
+    print(f"  ✓ {message}")
+
+def print_error(message):
+    print(f"  ✗ ERROR: {message}")
+
+def run_pipeline(reset_db=True):
     
-    cursor.execute("SELECT name FROM sqlite_master WHERE type='table'")
-    tables = [row[0] for row in cursor.fetchall()]
+    print_header("MARKET PULSE AI - COMPLETE PIPELINE")
+    print(f"Started at: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
     
-    for table in tables:
-        print(f"{table}:")
-        cursor.execute(f"SELECT * FROM {table}")
-        rows = cursor.fetchall()
-        for row in rows:
-            print(row)
-        print()
+    try:
+        print_step(1, "Database Initialization")
+        db.init_database()
+        print_result("Database initialized successfully")
+        
+        if reset_db:
+            db.clear_all_data()
+        
+        news_count = len(db.get_recent_news(count=1000))
+        prices_count = len(db.get_recent_prices(count=1000))
+        sentiment_count = len(db.get_sentiment_data())
+        
+        print_result(f"Initial Database State:")
+        print(f"    News articles: {news_count}")
+        print(f"    Price records: {prices_count}")
+        print(f"    Sentiment records: {sentiment_count}")
+        
+        # STEP 2: News Ingestion
+        print_step(2, "News Data Ingestion")
+        
+        tickers = config.TICKERS
+        print_result(f"Fetching news for tickers: {', '.join(tickers)}")
+        
+        from datetime import timedelta
+        today = datetime.now().date()
+        yesterday = today - timedelta(days=1)
+        from_str = str(yesterday)
+        to_str = str(today)
+        
+        total_articles = 0
+        for ticker in tickers:
+            print(f"  Processing {ticker}...")
+            articles = ingest.fetch_news(ticker, from_str, to_str)
+            if articles:
+                db.insert_news(articles)
+                saved_count = len(articles)
+                total_articles += saved_count
+                print_result(f"{ticker}: {saved_count} new articles saved")
+            else:
+                print_result(f"{ticker}: No new articles found")
+        
+        print_result(f"Total new articles ingested: {total_articles}")
+        
+        # STEP 3: Price Data Ingestion
+        print_step(3, "Price Data Ingestion")
+        
+        total_prices = 0
+        for ticker in tickers:
+            print(f"  Processing {ticker} prices...")
+            price_data = ingest.fetch_price_data(ticker)
+            if price_data:
+                db.insert_price(price_data)
+                saved_count = len(price_data)
+                total_prices += saved_count
+                print_result(f"{ticker}: {saved_count} new price records saved")
+            else:
+                print_result(f"{ticker}: No new price data found")
+        
+        print_result(f"Total new price records ingested: {total_prices}")
+        
+        # STEP 4: NLP Processing
+        print_step(4, "NLP Sentiment Analysis")
+        
+        unprocessed_news = db.get_unprocessed_news_tuples()
+        print_result(f"Found {len(unprocessed_news)} articles to process")
+        
+        processed_count = 0
+        for article in unprocessed_news:
+            print(f"  Processing article ID {article[0]}...")
+            
+            # Run sentiment analysis
+            sentiment_score, sentiment_label = nlp_engine.analyze_sentiment(article[3])  # article[3] is content
+            
+            # Save sentiment to database
+            db.save_sentiment_analysis(
+                news_id=article[0],
+                sentiment_score=sentiment_score,
+                sentiment_label=sentiment_label
+            )
+            
+            processed_count += 1
+            
+            if processed_count % 5 == 0:  # Progress update every 5 articles
+                print_result(f"Processed {processed_count}/{len(unprocessed_news)} articles")
+        
+        print_result(f"Sentiment analysis completed: {processed_count} articles processed")
+        
+        # STEP 5: Data Analysis
+        print_step(5, "Market Analysis & Correlation")
+        
+        # Run complete analysis
+        print("  Running complete analysis...")
+        analysis.run_analysis()
+        print_result("Market analysis completed")
+        
+        # STEP 6: Final Database State
+        print_step(6, "Pipeline Summary")
+        
+        # Get final counts
+        final_news_count = len(db.get_recent_news(count=1000))
+        final_prices_count = len(db.get_recent_prices(count=1000))
+        final_sentiment_count = len(db.get_sentiment_data())
+        
+        print_result("Final Database State:")
+        print(f"    News articles: {final_news_count} (+{final_news_count - news_count})")
+        print(f"    Price records: {final_prices_count} (+{final_prices_count - prices_count})")
+        print(f"    Sentiment records: {final_sentiment_count} (+{final_sentiment_count - sentiment_count})")
+        
+        print_result("Analysis files generated in dashboard/data/:")
+        print("    - sentiment_price_analysis.csv")
+        print("    - correlation_summary.csv") 
+        print("    - sentiment_label_analysis.csv")
+        
+        # STEP 7: Success
+        print_header("PIPELINE COMPLETED SUCCESSFULLY")
+        print(f"Finished at: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
+        print(f"Total processing time: ~{time.time():.0f} seconds")
+        
+    except Exception as e:
+        print_error(f"Pipeline failed: {str(e)}")
+        sys.exit(1)
+
+def show_current_status():
+    print_header("CURRENT DATABASE STATUS")
     
-    conn.close()
+    try:
+        news_count = len(db.get_recent_news(count=1000))
+        prices_count = len(db.get_recent_prices(count=1000))
+        sentiment_count = len(db.get_sentiment_data())
+        
+        print_result("Database Contents:")
+        print(f"    News articles: {news_count}")
+        print(f"    Price records: {prices_count}")
+        print(f"    Sentiment records: {sentiment_count}")
+        
+        recent_news = db.get_recent_news(5)
+        if recent_news:
+            print_result("Recent News Articles:")
+            for article in recent_news:
+                print(f"    {article['ticker']} - {article['headline'][:50]}...")
+        
+    except Exception as e:
+        print_error(f"Failed to get status: {str(e)}")
 
 if __name__ == "__main__":
-    display_table_contents()
+    start_time = time.time()
+    
+    if len(sys.argv) > 1 and sys.argv[1] == "status":
+        show_current_status()
+    else:
+        run_pipeline()
+    
+    end_time = time.time()
+    print(f"\nExecution time: {end_time - start_time:.2f} seconds")

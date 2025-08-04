@@ -13,9 +13,14 @@ def analyze_sentiment(text):
     with torch.no_grad():
         outputs = model(**inputs)
         probs = torch.nn.functional.softmax(outputs.logits, dim=-1)
-        score = torch.max(probs).item()
         
-    return score
+        predicted_class = torch.argmax(probs, dim=-1).item()
+        score = probs[0][predicted_class].item()
+        
+    labels = ["negative", "neutral", "positive"]
+    label = labels[predicted_class]
+    
+    return score, label
 
 def process_news_sentiment():
     news_items = get_unprocessed_news()
@@ -28,8 +33,8 @@ def process_news_sentiment():
     
     results = []
     for item in news_items:
-        score = analyze_sentiment(item["headline"])
-        results.append({"news_id": item["id"], "score": score})
+        score, label = analyze_sentiment(item["headline"])
+        results.append({"news_id": item["id"], "score": score, "label": label})
     
     insert_sentiment(results)
     print(f"Updated {len(results)} articles")

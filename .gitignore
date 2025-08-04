@@ -1,2 +1,40 @@
+# Environment variables
 .env
+
+# Database files
 *.db
+sql/market_pulse.db
+
+# Configuration and run files
+run.py
+config.py
+app/main.py
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.so
+
+# Virtual environments
+venv/
+env/
+ENV/
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Output files
+dashboard/data/*.csv
