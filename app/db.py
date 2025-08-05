@@ -478,3 +478,54 @@ def get_correlation_stats():
     results = cursor.fetchall()
     conn.close()
     return [dict(row) for row in results]
+
+def init_users_table():
+    conn = get_connection()
+    cursor = conn.cursor()
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS users (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            email TEXT UNIQUE NOT NULL,
+            tickers TEXT,
+            created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+        )
+    """)
+    conn.commit()
+    conn.close()
+
+def add_user(email, tickers):
+    conn = get_connection()
+    cursor = conn.cursor()
+    
+    try:
+        import json
+        cursor.execute(
+            "INSERT INTO users (email, tickers) VALUES (?, ?)",
+            (email, json.dumps(tickers))
+        )
+        conn.commit()
+        return cursor.lastrowid
+    except Exception:
+        return None
+    finally:
+        conn.close()
+
+def remove_user(email):
+    conn = get_connection()
+    cursor = conn.cursor()
+    
+    cursor.execute("DELETE FROM users WHERE email = ?", (email,))
+    deleted_count = cursor.rowcount
+    
+    conn.commit()
+    conn.close()
+    return deleted_count > 0
+
+def get_all_users():
+    conn = get_connection()
+    cursor = conn.cursor()
+    
+    cursor.execute("SELECT * FROM users ORDER BY created_at DESC")
+    results = cursor.fetchall()
+    conn.close()
+    return [dict(row) for row in results]

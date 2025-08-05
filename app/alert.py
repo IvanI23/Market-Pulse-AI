@@ -64,7 +64,7 @@ def generate_html_alert():
     positive_stocks = fetch_positive_stocks()
     negative_stocks = fetch_negative_stocks()
 
-    template_path = os.path.join(os.path.dirname(__file__), 'templates', 'alert_email.html')
+    template_path = os.path.join(os.path.dirname(__file__), '..', 'templates', 'alert_email.html')
     with open(template_path, 'r', encoding='utf-8') as f:
         html_template = f.read()
     
