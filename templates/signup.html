@@ -71,5 +71,38 @@
             <p>Already subscribed? <a href="/unsubscribe">Unsubscribe here</a></p>
         </div>
     </div>
+
+    <div id="signupModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header primary">
+                <span class="close">&times;</span>
+                <h2>🎉 Thank You for Signing Up!</h2>
+            </div>
+            <div class="modal-body">
+                <div class="alert alert-success">
+                    <strong>✅ Registration Successful!</strong>
+                </div>
+                <p id="signupMessage"></p>
+                <div style="margin: 20px 0;">
+                    <h4 style="color: #2a5298;">📊 Your Selected Tickers:</h4>
+                    <p id="signupTickers" style="font-size: 18px; font-weight: bold; color: #27ae60;"></p>
+                </div>
+                <div class="warning">
+                    <strong>📧 Check Your Email:</strong> A welcome email has been sent to your inbox with important information.
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary" onclick="closeSignupModal()">Got It!</button>
+                <button class="btn btn-outline" onclick="window.location.reload()">Sign Up Another</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='modal.js') }}"></script>
+    {% if show_modal %}
+    <script>
+        showModalOnLoad('signup', '{{ message }}', '{{ tickers_list }}');
+    </script>
+    {% endif %}
 </body>
 </html>
