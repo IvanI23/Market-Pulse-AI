@@ -29,11 +29,24 @@ def clear_all_data():
     cursor.execute("DELETE FROM sentiment_price_effect")
     cursor.execute("DELETE FROM news_articles")
     cursor.execute("DELETE FROM stock_prices")
+    
+    conn.commit()
+    conn.close()
+    print("✅ Database cleared successfully (users preserved)")
+
+def clear_all_data_including_users():
+    conn = get_connection()
+    cursor = conn.cursor()
+    
+    print("🗑️ Clearing ALL data including users...")
+    cursor.execute("DELETE FROM sentiment_price_effect")
+    cursor.execute("DELETE FROM news_articles")
+    cursor.execute("DELETE FROM stock_prices")
     cursor.execute("DELETE FROM users")
     
     conn.commit()
     conn.close()
-    print("✅ Database cleared successfully")
+    print("✅ All database data cleared successfully")
 
 def reset_database():
     clear_all_data()

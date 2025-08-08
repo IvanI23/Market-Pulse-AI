@@ -1,12 +1,18 @@
 import pandas as pd
 import os
+import sys
 from datetime import date
-from db import get_sentiment_data, store_sentiment_price_effects
-from analysis_utils import (
+
+# Add the parent directory to the path so we can import config
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
+from .db import get_sentiment_data, store_sentiment_price_effects
+from .analysis_utils import (
     prepare_data, calculate_correlation, analyze_by_sentiment_label,
     analyze_distribution, time_lag_analysis,
     print_analysis_summary
 )
+import config
 from config import (
     ensure_directories, DASHBOARD_DATA_DIR, SENTIMENT_ANALYSIS_FILE,
     CORRELATION_SUMMARY_FILE, LABEL_ANALYSIS_FILE,

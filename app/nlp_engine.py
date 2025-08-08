@@ -1,6 +1,6 @@
 import torch
 from transformers import AutoTokenizer, AutoModelForSequenceClassification
-from db import get_unprocessed_news, insert_sentiment
+from .db import get_unprocessed_news, insert_sentiment
 
 MODEL_NAME = "ProsusAI/finbert"
 tokenizer = AutoTokenizer.from_pretrained(MODEL_NAME)

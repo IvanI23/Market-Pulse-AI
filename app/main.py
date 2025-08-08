@@ -2,11 +2,13 @@ import time
 import sys
 import os
 from datetime import datetime
-import analysis
-import db
-import ingest
-import nlp_engine
-import analysis
+
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
+from . import analysis
+from . import db
+from . import ingest
+from . import nlp_engine
 import config
 
 def print_header(title):
@@ -147,9 +149,6 @@ def run_pipeline(reset_db=True):
         print(f"Finished at: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
         print(f"Total processing time: ~{time.time():.0f} seconds")
 
-        print("Generating Email Template... ")
-        analysis.generate_email_template()
-        
     except Exception as e:
         print_error(f"Pipeline failed: {str(e)}")
         sys.exit(1)
