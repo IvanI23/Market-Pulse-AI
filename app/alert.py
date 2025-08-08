@@ -1,4 +1,4 @@
-from . import db
+import app.db as db
 import sqlite3
 import os
 from datetime import datetime

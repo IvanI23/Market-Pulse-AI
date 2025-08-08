@@ -3,7 +3,7 @@ import requests
 import yfinance as yf
 from datetime import datetime, timedelta
 from dotenv import load_dotenv
-from .db import insert_news, insert_price, init_database, clear_all_data
+from app.db import insert_news, insert_price, init_database, clear_all_data
 
 load_dotenv()
 

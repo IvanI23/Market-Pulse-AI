@@ -2,14 +2,11 @@ import time
 import sys
 import os
 from datetime import datetime
-
-sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-
-from . import analysis
-from . import db
-from . import ingest
-from . import nlp_engine
-import config
+import app.analysis as analysis
+import app.db as db
+import app.ingest as ingest
+import app.nlp_engine as nlp_engine
+import app.config as config
 
 def print_header(title):
     print("\n" + "="*60)

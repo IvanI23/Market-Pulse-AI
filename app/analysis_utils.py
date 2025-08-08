@@ -3,10 +3,7 @@ import sys
 import os
 from scipy.stats import pearsonr
 
-sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-
-import config
-from config import CORRELATION_THRESHOLD, P_VALUE_THRESHOLD, MAX_LAG_DAYS, MIN_DATA_POINTS
+from app.config import CORRELATION_THRESHOLD, P_VALUE_THRESHOLD, MAX_LAG_DAYS, MIN_DATA_POINTS
 
 def prepare_data(data):
     if not data:

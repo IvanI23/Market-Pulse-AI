@@ -13,24 +13,7 @@ load_dotenv()
 
 def pipeline():
     try:
-        print("Starting Market Pulse AI Pipeline...")
-        
-        if len(sys.argv) > 1:
-            if sys.argv[1] == "status":
-                show_current_status()
-            elif sys.argv[1] == "no-reset":
-                run_pipeline(reset_db=False)
-            else:
-                run_pipeline()
-        else:
-            run_pipeline()
-            
-        html_content = generate_html_alert()
-        
-        users = get_all_users()
-        if not users:
-            print("No users found to send alerts to")
-            return False
+        run_pipeline(reset_db=False)
             
         smtp_server = os.getenv('SMTP_SERVER', 'smtp.gmail.com')
         smtp_port = int(os.getenv('SMTP_PORT', '587'))
@@ -40,7 +23,8 @@ def pipeline():
         if not sender_email or not sender_password:
             print("Email credentials not configured")
             return False
-        
+
+        users = get_all_users()
         success_count = 0
         for user in users:
             try:
@@ -52,6 +36,7 @@ def pipeline():
                 message["To"] = user_email
                 message["Subject"] = "Market Pulse AI - Daily Alert"
                 
+                html_content = generate_html_alert()
                 message.attach(MIMEText(html_content, "html"))
                 
                 with smtplib.SMTP(smtp_server, smtp_port) as server:
