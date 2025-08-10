@@ -5,11 +5,6 @@
 *.db
 sql/market_pulse.db
 
-# Configuration and run files
-run.py
-config.py
-app/main.py
-
 # Python cache
 __pycache__/
 *.pyc
@@ -35,6 +30,3 @@ Thumbs.db
 
 # Logs
 *.log
-
-# Output files
-dashboard/data/*.csv

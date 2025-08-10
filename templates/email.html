@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Market Pulse AI - Smart Stock Sentiment Analysis</title>
+    <style>{{EMAIL_STYLES}}</style>
+</head>
+<body>
+    <div class="email-container">
+        <!-- Header Section -->
+        <header class="email-header">
+            <h1>🤖 Market Pulse AI</h1>
+            <p>Advanced Sentiment Analysis & Market Intelligence</p>
+            <p>📅 Generated on {{TIMESTAMP}}</p>
+        </header>
+        
+        <!-- Statistics Dashboard -->
+        <section class="stats">
+            <div class="stat-item">
+                <div class="stat-number">{{POSITIVE_COUNT}}</div>
+                <div class="stat-label">📈 Bullish Signals</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">{{NEGATIVE_COUNT}}</div>
+                <div class="stat-label">📉 Bearish Signals</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">{{TOTAL_COUNT}}</div>
+                <div class="stat-label">🎯 Total Alerts</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">{{STOCK_COUNT}}</div>
+                <div class="stat-label">🏢 Companies Tracked</div>
+            </div>
+        </section>
+
+        <!-- Main Content Area -->
+        <main>
+            {{TICKER_SECTIONS}}
+        </main>
+
+        <!-- Footer Section -->
+        <footer class="email-footer">
+            <p>🤖 <strong>Market Pulse AI</strong> - Powered by FinBERT Neural Networks</p>
+            <p>🔍 High-confidence alerts (≥80% sentiment score) | 📊 Real-time Yahoo Finance data</p>
+            <p>🏆 Monitoring top 50 US equities | 📰 Top 4 most relevant articles per stock</p>
+            
+            <div class="disclaimer">
+                <p>⚠️ Important Investment Disclaimer</p>
+                <p>
+                    This analysis utilizes advanced FinBERT AI models trained specifically on financial news data. 
+                    While our algorithms achieve high accuracy, sentiment analysis may occasionally misinterpret 
+                    complex financial language, market jargon, sarcasm, or context-dependent statements. 
+                </p>
+                <p>
+                    <strong>This information is for educational and informational purposes only.</strong> 
+                    Sentiment scores should be considered as one data point in a comprehensive investment analysis. 
+                    Always conduct thorough due diligence, consult with qualified financial professionals, 
+                    and never invest more than you can afford to lose.
+                </p>
+                <p>
+                    Past performance does not guarantee future results. All investments carry risk of loss.
+                </p>
+            </div>
+        </footer>
+    </div>
+</body>
+</html>

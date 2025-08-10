@@ -1,0 +1,450 @@
+/* Email Client Reset & Base Styles */
+* {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    margin: 0;
+    padding: 20px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: #2c3e50;
+    line-height: 1.6;
+    -webkit-text-size-adjust: 100%;
+    -ms-text-size-adjust: 100%;
+}
+
+.e    .ticker-title {
+        font-size: 1.2em;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 2px;
+    }
+    
+    .company-name {
+        font-size: 0.9em;
+    }
+    
+    .ticker-symbol {
+        font-size: 0.65em;
+    }iner {
+    max-width: 950px;
+    margin: 0 auto;
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+    overflow: hidden;
+    border: none;
+}
+
+.email-header {
+    background: linear-gradient(135deg, #2c3e50 0%, #3498db 100%);
+    color: white;
+    padding: 40px 30px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.email-header::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 2px,
+        rgba(255,255,255,0.03) 2px,
+        rgba(255,255,255,0.03) 4px
+    );
+    animation: float 20s infinite linear;
+}
+
+@keyframes float {
+    0% { transform: translate(-50%, -50%) rotate(0deg); }
+    100% { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+.email-header h1 {
+    margin: 0;
+    font-size: 2.5em;
+    font-weight: 700;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+    position: relative;
+    z-index: 2;
+}
+
+.email-header p {
+    margin: 10px 0 0;
+    font-size: 1.1em;
+    opacity: 0.9;
+    font-weight: 300;
+    position: relative;
+    z-index: 2;
+}
+
+.stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+    padding: 30px;
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+}
+
+.stat-item {
+    text-align: center;
+    background: white;
+    padding: 25px 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    border-left: 4px solid #3498db;
+}
+
+.stat-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+}
+
+.stat-number {
+    font-size: 2.2em;
+    font-weight: 800;
+    background: linear-gradient(135deg, #3498db 0%, #2c3e50 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 8px;
+}
+
+.stat-label {
+    font-size: 0.9em;
+    color: #6c757d;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.sector-header {
+    background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+    color: white;
+    padding: 15px 25px;
+    font-size: 1.2em;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+}
+
+.ticker-section {
+    padding: 25px;
+    border-bottom: 1px solid #e8f4f8;
+    transition: background-color 0.2s ease;
+}
+
+.ticker-section:hover {
+    background-color: #fafbfc;
+}
+
+.ticker-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 2px solid #e8f4f8;
+}
+
+.ticker-title {
+    font-size: 1.5em;
+    font-weight: 700;
+    color: #2c3e50;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.company-name {
+    font-weight: 700;
+    color: #2c3e50;
+    font-size: 1em;
+}
+
+.ticker-symbol {
+    font-weight: 400;
+    color: #6c757d;
+    font-size: 0.75em;
+    opacity: 0.8;
+}
+
+.ticker-emoji {
+    margin-right: 12px;
+    font-size: 1.2em;
+}
+
+.ticker-summary {
+    font-size: 0.9em;
+    color: #6c757d;
+    background: #f8f9fa;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-weight: 500;
+}
+
+.articles-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 18px;
+    margin-top: 20px;
+}
+
+.article-card {
+    background: white;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    border: 1px solid #f0f0f0;
+    transition: all 0.2s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.article-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 4px;
+    background: #6c757d;
+}
+
+.article-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+}
+
+.positive-article::before {
+    background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+}
+.negative-article::before {
+    background: linear-gradient(135deg, #dc3545 0%, #fd7e14 100%);
+}
+.neutral-article::before {
+    background: linear-gradient(135deg, #6c757d 0%, #495057 100%);
+}
+
+.sentiment-badge {
+    font-size: 0.75em;
+    padding: 6px 12px;
+    border-radius: 20px;
+    color: white;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    display: inline-block;
+    margin-bottom: 12px;
+}
+
+.positive-badge { 
+    background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+    box-shadow: 0 2px 8px rgba(40, 167, 69, 0.3);
+}
+.negative-badge { 
+    background: linear-gradient(135deg, #dc3545 0%, #fd7e14 100%);
+    box-shadow: 0 2px 8px rgba(220, 53, 69, 0.3);
+}
+.neutral-badge { 
+    background: linear-gradient(135deg, #6c757d 0%, #495057 100%);
+    box-shadow: 0 2px 8px rgba(108, 117, 125, 0.3);
+}
+
+.article-headline {
+    font-size: 0.95em;
+    color: #2c3e50;
+    margin-top: 12px;
+    line-height: 1.5;
+    font-weight: 500;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.price-info {
+    font-size: 0.85em;
+    margin-top: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: #6c757d;
+    padding-top: 12px;
+    border-top: 1px solid #f0f0f0;
+}
+
+.price-up {
+    color: #28a745;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+}
+
+.price-up::before {
+    content: '↗️';
+    margin-right: 4px;
+}
+
+.price-down {
+    color: #dc3545;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+}
+
+.price-down::before {
+    content: '↘️';
+    margin-right: 4px;
+}
+
+.no-alerts {
+    padding: 40px;
+    text-align: center;
+    color: #6c757d;
+    font-style: italic;
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    border-radius: 12px;
+    margin: 20px;
+}
+
+.no-alerts::before {
+    content: '📊';
+    display: block;
+    font-size: 3em;
+    margin-bottom: 15px;
+}
+
+.email-footer {
+    background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+    color: white;
+    text-align: center;
+    padding: 30px;
+    font-size: 0.9em;
+    position: relative;
+    overflow: hidden;
+}
+
+.email-footer::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, #3498db 0%, #2980b9 50%, #3498db 100%);
+}
+
+.email-footer p {
+    margin: 8px 0;
+}
+
+.email-footer strong {
+    font-weight: 700;
+    color: #3498db;
+}
+
+.disclaimer {
+    margin-top: 20px;
+    padding: 20px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 12px;
+    font-size: 0.85em;
+    line-height: 1.6;
+    border: 1px solid rgba(255,255,255,0.2);
+    backdrop-filter: blur(10px);
+}
+
+.disclaimer p {
+    margin: 10px 0;
+}
+
+.disclaimer p:first-child {
+    font-weight: 600;
+    color: #f39c12;
+    margin-bottom: 15px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    body {
+        padding: 10px;
+    }
+    
+    .email-header {
+        padding: 25px 20px;
+    }
+    
+    .email-header h1 {
+        font-size: 2em;
+    }
+    
+    .stats {
+        grid-template-columns: repeat(2, 1fr);
+        padding: 20px;
+        gap: 15px;
+    }
+    
+    .stat-item {
+        padding: 20px 15px;
+    }
+    
+    .ticker-section {
+        padding: 20px;
+    }
+    
+    .ticker-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+    
+    .articles-grid {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+    
+    .article-card {
+        padding: 18px;
+    }
+}
+
+@media (max-width: 480px) {
+    .stats {
+        grid-template-columns: 1fr;
+    }
+    
+    .stat-number {
+        font-size: 1.8em;
+    }
+    
+    .email-header h1 {
+        font-size: 1.8em;
+    }
+    
+    .ticker-title {
+        font-size: 1.3em;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 4px;
+    }
+    
+    .company-name {
+        font-size: 0.95em;
+    }
+    
+    .ticker-symbol {
+        font-size: 0.7em;
+    }
+}

@@ -5,15 +5,11 @@ transformers
 # Data analysis packages
 pandas
 numpy
-scipy
 
 # API and web packages
 requests
 yfinance
 python-dotenv
 
-# Web framework
-Flask
-
-# Database packages
-psycopg2-binary
+# Email functionality
+email-validator

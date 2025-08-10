@@ -1,57 +1,32 @@
 import os
-import smtplib
-import json
-from email.mime.text import MIMEText
-from email.mime.multipart import MIMEMultipart
-import sys
 from dotenv import load_dotenv
-from app.main import run_pipeline, show_current_status
-from app.alert import generate_html_alert
-from app.db import get_all_users
+from app.core.main import run_pipeline, show_current_status
+from app.alerts.alert import generate_html_alert
+from app.services.email_service import send_alert_email
 
+# Load environment variables from .env file
 load_dotenv()
 
 def pipeline():
     try:
+        # Run the complete market analysis pipeline
         run_pipeline(reset_db=False)
-            
-        smtp_server = os.getenv('SMTP_SERVER', 'smtp.gmail.com')
-        smtp_port = int(os.getenv('SMTP_PORT', '587'))
-        sender_email = os.getenv('SENDER_EMAIL')
-        sender_password = os.getenv('SENDER_PASSWORD')
+        my_email = os.getenv('MY_EMAIL')
         
-        if not sender_email or not sender_password:
-            print("Email credentials not configured")
+        if not my_email:
+            print("Personal email not configured. Please set MY_EMAIL in .env file")
             return False
 
-        users = get_all_users()
-        success_count = 0
-        for user in users:
-            try:
-                user_email = user['email']
-                user_tickers = json.loads(user['tickers']) if user['tickers'] else []
-                
-                message = MIMEMultipart()
-                message["From"] = f"Market Pulse AI <{sender_email}>"
-                message["To"] = user_email
-                message["Subject"] = "Market Pulse AI - Daily Alert"
-                
-                html_content = generate_html_alert()
-                message.attach(MIMEText(html_content, "html"))
-                
-                with smtplib.SMTP(smtp_server, smtp_port) as server:
-                    server.starttls()
-                    server.login(sender_email, sender_password)
-                    server.send_message(message)
-                
-                success_count += 1
-                print(f"Alert sent to {user_email}")
-                
-            except Exception as e:
-                print(f"Failed to send alert to {user.get('email', 'unknown')}: {e}")
+        # Generate HTML alert content and send email
+        html_content = generate_html_alert()
+        success = send_alert_email(my_email, html_content, "Market Pulse AI - Daily Alert")
         
-        print(f"Pipeline completed. Sent {success_count} alerts out of {len(users)} users")
-        return True
+        if success:
+            print("Pipeline completed successfully!")
+            return True
+        else:
+            print("Pipeline completed but email failed to send")
+            return False
         
     except Exception as e:
         print(f"Pipeline failed: {e}")

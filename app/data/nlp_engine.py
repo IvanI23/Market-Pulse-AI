@@ -1,28 +1,33 @@
 import torch
 from transformers import AutoTokenizer, AutoModelForSequenceClassification
-from app.db import get_unprocessed_news, insert_sentiment
+from app.core.database import get_unprocessed_news, insert_sentiment
 
+# FinBERT - financial sentiment analysis model
 MODEL_NAME = "ProsusAI/finbert"
 tokenizer = AutoTokenizer.from_pretrained(MODEL_NAME)
 model = AutoModelForSequenceClassification.from_pretrained(MODEL_NAME)
 model.eval()
 
 def analyze_sentiment(text):
+    # Tokenize and truncate text for FinBERT processing
     inputs = tokenizer(text, return_tensors="pt", truncation=True, max_length=512)
     
     with torch.no_grad():
         outputs = model(**inputs)
         probs = torch.nn.functional.softmax(outputs.logits, dim=-1)
         
+        # Get highest probability prediction
         predicted_class = torch.argmax(probs, dim=-1).item()
         score = probs[0][predicted_class].item()
         
+    # Map model output to sentiment labels
     labels = ["negative", "neutral", "positive"]
     label = labels[predicted_class]
     
     return score, label
 
 def process_news_sentiment():
+    # Get all unprocessed news headlines from database
     news_items = get_unprocessed_news()
     
     if not news_items:
@@ -31,11 +36,13 @@ def process_news_sentiment():
     
     print(f"Processing {len(news_items)} headlines...")
     
+    # Analyze sentiment for each headline
     results = []
     for item in news_items:
         score, label = analyze_sentiment(item["headline"])
         results.append({"news_id": item["id"], "score": score, "label": label})
     
+    # Store sentiment results in database
     insert_sentiment(results)
     print(f"Updated {len(results)} articles")
 

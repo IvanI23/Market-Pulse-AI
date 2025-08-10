@@ -29,11 +29,3 @@ CREATE TABLE IF NOT EXISTS sentiment_price_effect (
     published_at DATE,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP
 );
-
--- Users table for subscription management
-CREATE TABLE IF NOT EXISTS users (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    email TEXT UNIQUE NOT NULL,
-    tickers TEXT,  -- JSON string for SQLite compatibility: '["AAPL", "TSLA"]'
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
-);

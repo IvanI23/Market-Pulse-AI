@@ -3,22 +3,32 @@ import requests
 import yfinance as yf
 from datetime import datetime, timedelta
 from dotenv import load_dotenv
-from app.db import insert_news, insert_price, init_database, clear_all_data
+from app.core.database import insert_news, insert_price, init_database, clear_all_data
+from app.data.stock_sectors import get_company_name
 
 load_dotenv()
 
+# NewsAPI configuration
 NEWS_API_KEY = os.getenv("api_key")
-TICKERS = ["AAPL", "MSFT", "GOOGL", "TSLA", "AMZN"]
 NEWSAPI_URL = "https://newsapi.org/v2/everything"
 
+# Stock tickers to track for news and price data
+TICKERS = [
+    "AAPL", "MSFT", "GOOGL", "AMZN", "NVDA", "TSLA", "META", "BRK.B", "UNH", "JNJ",
+    "XOM", "V", "PG", "JPM", "HD", "CVX", "MA", "PFE", "ABBV", "BAC",
+    "KO", "AVGO", "PEP", "TMO", "COST", "MRK", "WMT", "ACN", "LLY", "DHR",
+    "NEE", "ABT", "VZ", "ORCL", "NKE", "CRM", "ADBE", "TXN", "BMY", "PM",
+    "RTX", "WFC", "NFLX", "T", "DIS", "UPS", "HON", "QCOM", "UNP", "IBM"
+]
 
-def fetch_news(ticker: str, from_date: str, to_date: str, page_size=20):
+def fetch_news(ticker: str, from_date: str, to_date: str, page_size=4):
+    """Fetch news articles for a specific ticker from NewsAPI"""
     query = f'"{ticker}" AND stock'
     params = {
         "q": query,
         "from": from_date,
         "to": to_date,
-        "sortBy": "publishedAt",
+        "sortBy": "relevancy",
         "pageSize": page_size,
         "apiKey": NEWS_API_KEY,
         "language": "en",
@@ -42,8 +52,8 @@ def fetch_news(ticker: str, from_date: str, to_date: str, page_size=20):
 
     return news_data
 
-
 def fetch_price_data(ticker: str, days_back: int = 7):
+    """Fetch historical price data from Yahoo Finance"""
     end_date = datetime.today()
     start_date = end_date - timedelta(days=days_back)
 
@@ -52,6 +62,7 @@ def fetch_price_data(ticker: str, days_back: int = 7):
         print(f"No price data for {ticker}")
         return []
 
+    # Convert DataFrame to list of dictionaries for database insertion
     price_data = []
     for idx, row in df.iterrows():
         price_data.append({
@@ -62,8 +73,8 @@ def fetch_price_data(ticker: str, days_back: int = 7):
 
     return price_data
 
-
 def run_ingestion(reset_database=True):
+    company_names = get_company_name()
     db_path = os.path.join(os.path.dirname(__file__), '..', 'sql', 'market_pulse.db')
     if not os.path.exists(db_path):
         print("Setting up database...")
@@ -77,9 +88,10 @@ def run_ingestion(reset_database=True):
     to_str = str(today)
 
     for ticker in TICKERS:
-        print(f"\nProcessing {ticker}...")
-        
-        news_items = fetch_news(ticker, from_str, to_str)
+        company_name = company_names.get(ticker, "Unknown Company")
+        print(f"\nProcessing {company_name}...")
+
+        news_items = fetch_news(company_name, from_str, to_str)
         if news_items:
             print(f"Found {len(news_items)} articles")
             insert_news(news_items)
@@ -97,7 +109,6 @@ def run_ingestion(reset_database=True):
                 print(f"  Close: ${latest['close']:.2f}")
         else:
             print(f"No price data")
-
 
 if __name__ == "__main__":
     run_ingestion()

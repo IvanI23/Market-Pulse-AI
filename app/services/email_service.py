@@ -2,14 +2,14 @@ import smtplib
 import os
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
-from flask import render_template
 from dotenv import load_dotenv
 
+# Load environment variables for email configuration
 load_dotenv()
 
-def send_welcome_email(user_email, selected_tickers):
+def send_alert_email(recipient_email, html_content, subject="Market Pulse AI - Daily Alert"):
     try:
-        # Email configuration
+        # Get SMTP configuration from environment
         smtp_server = os.getenv('SMTP_SERVER', 'smtp.gmail.com')
         smtp_port = int(os.getenv('SMTP_PORT', '587'))
         sender_email = os.getenv('SENDER_EMAIL')
@@ -19,28 +19,23 @@ def send_welcome_email(user_email, selected_tickers):
             print("Email credentials not configured")
             return False
         
-        # Create message
+        # Create email message with HTML content
         message = MIMEMultipart()
         message["From"] = f"Market Pulse AI <{sender_email}>"
-        message["To"] = user_email
-        message["Subject"] = "Welcome to Market Pulse AI! 🚀"
+        message["To"] = recipient_email
+        message["Subject"] = subject
         
-        # Render email template
-        html_body = render_template('welcome_email.html', 
-                                  tickers=selected_tickers,
-                                  tickers_list=", ".join(selected_tickers))
+        message.attach(MIMEText(html_content, "html"))
         
-        message.attach(MIMEText(html_body, "html"))
-        
-        # Send email
+        # Send email via SMTP
         with smtplib.SMTP(smtp_server, smtp_port) as server:
             server.starttls()
             server.login(sender_email, sender_password)
             server.send_message(message)
         
-        print(f"✅ Welcome email sent to {user_email}")
+        print(f"✅ Alert email sent to {recipient_email}")
         return True
         
     except Exception as e:
-        print(f"❌ Failed to send welcome email: {e}")
+        print(f"❌ Failed to send alert email: {e}")
         return False
