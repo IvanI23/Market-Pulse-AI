@@ -70,7 +70,7 @@ def run_pipeline(reset_db=True):
         total_articles = 0
         for ticker in tickers:
             print(f"  Processing {ticker}...")
-            articles = ingest.fetch_news(ticker, from_str, to_str)
+            articles = ingest.fetch_news_interface(ticker, from_str, to_str)
             if articles:
                 db.insert_news(articles)
                 saved_count = len(articles)

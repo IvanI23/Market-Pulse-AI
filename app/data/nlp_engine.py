@@ -41,8 +41,7 @@ def process_news_sentiment():
     for item in news_items:
         score, label = analyze_sentiment(item["headline"])
         results.append({"news_id": item["id"], "score": score, "label": label})
-    
-    # Store sentiment results in database
+
     insert_sentiment(results)
     print(f"Updated {len(results)} articles")
 

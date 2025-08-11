@@ -21,7 +21,8 @@ def generate_article_card_html(stock):
     price_before = stock[5]
     price_after = stock[6]
     price_change = stock[7]
-    headline = stock[-2]
+    headline = stock[-3]  # headline is now 3rd from last
+    url = stock[-1]       # url is last
     
     # Assign styling based on sentiment
     if label == 'positive':
@@ -37,32 +38,43 @@ def generate_article_card_html(stock):
         badge_class = "neutral-badge"
         emoji = "➖"
     
-    # Price change styling
     price_change_class = "price-up" if price_change >= 0 else "price-down"
     price_arrow = "↗" if price_change >= 0 else "↘"
+    
+    headline_html = f'<a href="{url}" target="_blank" class="article-link">"{headline}"</a>' if url else f'"{headline}"'
     
     return f"""
             <div class="article-card {article_class}">
                 <div class="article-header">
-                    <div class="sentiment-badge {badge_class}">
-                        {emoji} {label.upper()}
-                        <div class="score-text">Score: {score:.2f}</div>
+                    <div class="company-sector">
+                        <span class="company-name">{company_name} ({ticker})</span>
+                        <span class="sector">{sector}</span>
+                    </div>
+                    <div class="sentiment-wrapper">
+                        <span class="sentiment-badge {badge_class}">
+                            {emoji} {label.upper()}
+                        </span>
+                        <span class="score-text">{score:.2f}</span>
                     </div>
                 </div>
+
                 <div class="article-headline">
-                    "{headline}"
+                    {headline_html}
                 </div>
+
                 <div class="price-info">
                     <div class="price-movement">
-                        <span>${price_before:.2f}</span>
+                        <span class="price-before">${price_before:.2f}</span>
                         <span class="price-arrow">{price_arrow}</span>
-                        <span>${price_after:.2f}</span>
+                        <span class="price-after">${price_after:.2f}</span>
                     </div>
                     <div class="price-change {price_change_class}">
                         {price_change:+.2f}%
                     </div>
                 </div>
-            </div>"""
+            </div>
+
+"""
 
 def generate_ticker_section_html(ticker, articles):
     company_name = get_company_name(ticker)

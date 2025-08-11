@@ -3,68 +3,71 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Market Pulse AI - Smart Stock Sentiment Analysis</title>
-    <style>{{EMAIL_STYLES}}</style>
+    <title>Market Pulse AI - Daily Alert</title>
+    <style>
+        {{EMAIL_STYLES}}
+    </style>
 </head>
 <body>
     <div class="email-container">
-        <!-- Header Section -->
-        <header class="email-header">
-            <h1>🤖 Market Pulse AI</h1>
-            <p>Advanced Sentiment Analysis & Market Intelligence</p>
-            <p>📅 Generated on {{TIMESTAMP}}</p>
-        </header>
-        
-        <!-- Statistics Dashboard -->
-        <section class="stats">
-            <div class="stat-item">
-                <div class="stat-number">{{POSITIVE_COUNT}}</div>
-                <div class="stat-label">📈 Bullish Signals</div>
+        <div class="email-header">
+            <div class="header-content">
+                <h1 class="main-title">
+                    📊 Market Pulse AI
+                </h1>
+                <p class="subtitle">Intelligent Market Sentiment Analysis</p>
+                <div class="timestamp">
+                    {{TIMESTAMP}}
+                </div>
             </div>
-            <div class="stat-item">
-                <div class="stat-number">{{NEGATIVE_COUNT}}</div>
-                <div class="stat-label">📉 Bearish Signals</div>
-            </div>
-            <div class="stat-item">
-                <div class="stat-number">{{TOTAL_COUNT}}</div>
-                <div class="stat-label">🎯 Total Alerts</div>
-            </div>
-            <div class="stat-item">
-                <div class="stat-number">{{STOCK_COUNT}}</div>
-                <div class="stat-label">🏢 Companies Tracked</div>
-            </div>
-        </section>
+        </div>
 
-        <!-- Main Content Area -->
-        <main>
-            {{TICKER_SECTIONS}}
-        </main>
+        <div class="stats-section">
+            <div class="stats-header">
+                <h2>📈 Today's Market Pulse</h2>
+            </div>
+            <div class="stats-grid">
+                <div class="stat-card total-card">
+                    <div class="stat-number">{{TOTAL_COUNT}}</div>
+                    <div class="stat-label">Total Alerts</div>
+                </div>
+                <div class="stat-card positive-card">
+                    <div class="stat-number">{{POSITIVE_COUNT}}</div>
+                    <div class="stat-label">Bullish Signals</div>
+                </div>
+                <div class="stat-card negative-card">
+                    <div class="stat-number">{{NEGATIVE_COUNT}}</div>
+                    <div class="stat-label">Bearish Signals</div>
+                </div>
+                <div class="stat-card stocks-card">
+                    <div class="stat-number">{{STOCK_COUNT}}</div>
+                    <div class="stat-label">Stocks Tracked</div>
+                </div>
+            </div>
+        </div>
 
-        <!-- Footer Section -->
-        <footer class="email-footer">
-            <p>🤖 <strong>Market Pulse AI</strong> - Powered by FinBERT Neural Networks</p>
-            <p>🔍 High-confidence alerts (≥80% sentiment score) | 📊 Real-time Yahoo Finance data</p>
-            <p>🏆 Monitoring top 50 US equities | 📰 Top 4 most relevant articles per stock</p>
+        <div class="content-section">
+            <div class="content-header">
+                <h2>🎯 High-Impact Sentiment Alerts</h2>
+                <p>Stocks with sentiment scores ≥ 0.8 and significant price movements</p>
+            </div>
             
-            <div class="disclaimer">
-                <p>⚠️ Important Investment Disclaimer</p>
-                <p>
-                    This analysis utilizes advanced FinBERT AI models trained specifically on financial news data. 
-                    While our algorithms achieve high accuracy, sentiment analysis may occasionally misinterpret 
-                    complex financial language, market jargon, sarcasm, or context-dependent statements. 
-                </p>
-                <p>
-                    <strong>This information is for educational and informational purposes only.</strong> 
-                    Sentiment scores should be considered as one data point in a comprehensive investment analysis. 
-                    Always conduct thorough due diligence, consult with qualified financial professionals, 
-                    and never invest more than you can afford to lose.
-                </p>
-                <p>
-                    Past performance does not guarantee future results. All investments carry risk of loss.
-                </p>
+            {{TICKER_SECTIONS}}
+        </div>
+
+        <div class="email-footer">
+            <div class="footer-content">
+                <div class="footer-branding">
+                    <strong>Market Pulse AI</strong>
+                </div>
+                <div class="footer-disclaimer">
+                    <p><strong>Disclaimer:</strong> This analysis is for informational purposes only and should not be considered as financial advice. Always conduct your own research and consult with financial professionals before making investment decisions.</p>
+                </div>
+                <div class="footer-tech">
+                    <p>Powered by FinBERT AI • NewsAPI • Yahoo Finance</p>
+                </div>
             </div>
-        </footer>
+        </div>
     </div>
 </body>
 </html>

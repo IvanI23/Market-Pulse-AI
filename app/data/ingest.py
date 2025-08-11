@@ -20,10 +20,12 @@ TICKERS = [
     "NEE", "ABT", "VZ", "ORCL", "NKE", "CRM", "ADBE", "TXN", "BMY", "PM",
     "RTX", "WFC", "NFLX", "T", "DIS", "UPS", "HON", "QCOM", "UNP", "IBM"
 ]
+def fetch_news_interface(ticker: str, from_date: str, to_date: str, page_size=4):
+    company_name = get_company_name(ticker)
+    return fetch_news(ticker, company_name, from_date, to_date, page_size)
 
-def fetch_news(ticker: str, from_date: str, to_date: str, page_size=4):
-    """Fetch news articles for a specific ticker from NewsAPI"""
-    query = f'"{ticker}" AND stock'
+def fetch_news(ticker: str, company_name: str, from_date: str, to_date: str, page_size=4):
+    query = f'"{company_name}"'
     params = {
         "q": query,
         "from": from_date,
@@ -36,7 +38,7 @@ def fetch_news(ticker: str, from_date: str, to_date: str, page_size=4):
 
     response = requests.get(NEWSAPI_URL, params=params)
     if response.status_code != 200:
-        print(f"Failed to fetch news for {ticker}: {response.text}")
+        print(f"Failed to fetch news for {company_name}: {response.text}")
         return []
 
     articles = response.json().get("articles", [])
@@ -53,7 +55,6 @@ def fetch_news(ticker: str, from_date: str, to_date: str, page_size=4):
     return news_data
 
 def fetch_price_data(ticker: str, days_back: int = 7):
-    """Fetch historical price data from Yahoo Finance"""
     end_date = datetime.today()
     start_date = end_date - timedelta(days=days_back)
 
@@ -91,7 +92,7 @@ def run_ingestion(reset_database=True):
         company_name = company_names.get(ticker, "Unknown Company")
         print(f"\nProcessing {company_name}...")
 
-        news_items = fetch_news(company_name, from_str, to_str)
+        news_items = fetch_news(ticker, company_name, from_str, to_str)
         if news_items:
             print(f"Found {len(news_items)} articles")
             insert_news(news_items)
